@@ -2,6 +2,7 @@ ClientApplication/x64/
 ServerApplication/x64/
 ClientApplication/ClientApplication/x64/
 ServerApplication/ServerApplication/x64/
+ClientApplication/ClientApplication/zlib/
 
 *.sln
 
