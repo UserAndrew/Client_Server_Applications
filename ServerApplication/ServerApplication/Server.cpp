@@ -75,7 +75,7 @@ ParseResult Server::setListenSocket()
 ParseResult Server::createClientSocket()
 {
     clientSocket = accept(listenSocket, NULL, NULL);
-                                               
+
     if (clientSocket == INVALID_SOCKET)
     {
         std::cout << "Accepting socket failed." << std::endl;
@@ -89,5 +89,78 @@ ParseResult Server::createClientSocket()
         std::cout << "Accepting socket succes!" << std::endl;
         closesocket(listenSocket);
         return ParseResult::SUCCESS;
+    }
+}
+
+int Server::startServer()
+{
+    int result;
+    result = initWinsock();
+    if (result != 0)
+    {
+        std::cout << "WSAStartup failed, result = " << result << std::endl;
+        return 1;
+    }
+    else
+    {
+        std::cout << "WSAStartup succes." << std::endl;
+    }
+
+    result = setConnectionParameters();
+    if (result != 0)
+    {
+        std::cout << "getaddrinfo failed with error #" << result << std::endl;
+        WSACleanup();
+        return 1;
+    }
+
+    createListenSocket();
+    serverSocketBinding();
+    setListenSocket();
+    createClientSocket();
+
+}
+
+int Server::receiveFromClient()
+{
+    int result;
+    ZeroMemory(recvBuffer, sizeof(recvBuffer));
+    result = recv(clientSocket, recvBuffer, 1024, 0);
+    if (result > 0)
+    {
+        std::cout << "Received " << result << " bytes." << std::endl;
+        std::cout << "Received data: " << recvBuffer << std::endl;
+
+    }
+    else if (result == 0)
+    {
+        std::cout << "Connection closing..." << std::endl;
+    }
+    else
+    {
+        std::cout << "receive failed with error." << std::endl;
+        closesocket(clientSocket);
+        freeaddrinfo(addrResult);
+        WSACleanup();
+        return 1;
+    }
+}
+
+void Server::Attach(IObserver* observer)
+{
+    m_list_observer.push_back(observer);
+}
+
+void Server::Detach(IObserver* observer)
+{
+    m_list_observer.remove(observer);
+}
+
+void Server::Notify()
+{
+    std::list<IObserver*>::iterator iterator = m_list_observer.begin();
+    while (iterator != m_list_observer.end()) {
+        (*iterator)->Update(m_message);
+        ++iterator;
     }
 }

@@ -10,28 +10,8 @@ int main()
     int result;
     Client client;
 
-    client.printCurrentProcessId();
-    result = client.initWinsock();
-    if (result != 0)
-    {
-        std::cout << "WSAStartup failed, result = " << result << std::endl;
-        return 1;
-    }
-    else
-    {
-        std::cout << "WSAStartup succes." << std::endl;
-    }
-
-    result = client.setConnectionParameters();
-    if (result != 0)
-    {
-        std::cout << "getaddrinfo failed with error #" << result << std::endl;
-        WSACleanup();
-        return 1;
-    }
-
-    client.createConnectSocket();
-    client.createConnectToServer();
+    client.startClient();
+    client.sendMessageToServer();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

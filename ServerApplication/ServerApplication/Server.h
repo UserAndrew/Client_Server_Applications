@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <ws2tcpip.h>
 #include <iostream>
+#include <list>
+#include "ISubject.h"
 
 enum class ParseResult
 {
@@ -15,21 +17,29 @@ enum class ParseResult
     NOT_ZERO_ERROR
 };
 
-class Server
+class Server : public ISubject
 {
 private:
     WSADATA wsaData;
     ADDRINFO hints;
     ADDRINFO* addrResult = nullptr;
+    std::list<IObserver*> m_list_observer;
+    std::string m_message;
+    char recvBuffer[1024];
 
 public:
     SOCKET clientSocket = INVALID_SOCKET;
     SOCKET listenSocket = INVALID_SOCKET;
+    virtual ~Server(){};
+    void Attach(IObserver* observer) override;
+    void Detach(IObserver* observer) override;
+    void Notify() override;
     int initWinsock();
     int setConnectionParameters();
     ParseResult createListenSocket();
     ParseResult serverSocketBinding();
     ParseResult setListenSocket();
     ParseResult createClientSocket();
+    int startServer();
+    int receiveFromClient();
 };
-

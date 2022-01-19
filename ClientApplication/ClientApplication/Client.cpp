@@ -1,4 +1,6 @@
 #include "Client.h"
+#include <sstream>
+
 
 void Client::printCurrentProcessId()
 {
@@ -44,7 +46,7 @@ ParseResult Client::createConnectToServer()
     if (result == SOCKET_ERROR)
     {
         std::cout << "Unable connect to server." << std::endl;
-        closesocket(connectSocket);//т.к. соединение не получилось, сокет необходимо закрыть
+        closesocket(connectSocket);
         connectSocket = INVALID_SOCKET;
         freeaddrinfo(addrResult);
         WSACleanup();
@@ -55,4 +57,74 @@ ParseResult Client::createConnectToServer()
         std::cout << "Client connected!" << std::endl;
         return ParseResult::SUCCESS;
     }
+}
+
+std::string Client::messageProcessing()
+{
+    messageProcessing(myName);
+}
+
+std::string Client::messageProcessing(std::string my_string)
+{
+    std::string result;
+    DWORD pid = GetCurrentProcessId();
+    result = my_string + convertedPidToString(pid) + "; ";
+    return result;
+}
+
+std::string Client::convertedPidToString(DWORD dword)
+{
+    std::stringstream string_for_dword;
+    string_for_dword << dword;
+    std::string target_string = string_for_dword.str();
+    return target_string;
+}
+
+void Client::writeInSendBuffer(std::string my_string)
+{
+    sendBuffer.append(my_string);
+}
+
+int Client::sendMessageToServer()
+{
+    const char* my_sendBuffer_in_char = sendBuffer.c_str();
+    int result = send(connectSocket, my_sendBuffer_in_char, \
+        (int)strlen(my_sendBuffer_in_char), 0);
+    if (result == SOCKET_ERROR)
+    {
+        std::cout << "send failed, error: " << result << std::endl;
+        closesocket(connectSocket);
+        freeaddrinfo(addrResult);
+        WSACleanup();
+        return 1;
+    }
+    return result;
+}
+
+int Client::startClient()
+{
+    int result;
+    printCurrentProcessId();
+    result = initWinsock();
+    if (result != 0)
+    {
+        std::cout << "WSAStartup failed, result = " << result << std::endl;
+        return 1;
+    }
+    else
+    {
+        std::cout << "WSAStartup succes." << std::endl;
+    }
+
+    result = setConnectionParameters();
+    if (result != 0)
+    {
+        std::cout << "getaddrinfo failed with error #" << result << std::endl;
+        WSACleanup();
+        return 1;
+    }
+
+    createConnectSocket();
+    createConnectToServer();
+    writeInSendBuffer(messageProcessing());
 }

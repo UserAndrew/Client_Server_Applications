@@ -11,30 +11,8 @@ int main()
     SOCKET socket = INVALID_SOCKET;
     Server server;
 
-    result = server.initWinsock();
-    if (result != 0)
-    {
-        std::cout << "WSAStartup failed, result = " << result << std::endl;
-        return 1;
-    }
-    else
-    {
-        std::cout << "WSAStartup succes." << std::endl;
-    }
-
-    result = server.setConnectionParameters();
-    if (result != 0)
-    {
-        std::cout << "getaddrinfo failed with error #" << result << std::endl;
-        WSACleanup();
-        return 1;
-    }
-
-    server.createListenSocket();
-    server.serverSocketBinding();
-    server.setListenSocket();
-    server.createClientSocket();
-
+    server.startServer();
+    server.receiveFromClient();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
