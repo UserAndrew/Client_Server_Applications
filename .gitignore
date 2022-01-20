@@ -3,11 +3,14 @@ ServerApplication/x64/
 ClientApplication/ClientApplication/x64/
 ServerApplication/ServerApplication/x64/
 ClientApplication/ClientApplication/zlib/
+ClientApplication/.vs/
+ServerApplication/.vs/
+
 
 *.sln
 
-*.vsxproj
+*.vcxproj
 
-*.vsxproj.filters
+*.vcxproj.filters
 
-*.vsxproj.user
+*.vcxproj.user

@@ -1,4 +1,5 @@
 #include "Client.h"
+#include "getSymbol.h"
 #include <sstream>
 
 
@@ -61,14 +62,17 @@ ParseResult Client::createConnectToServer()
 
 std::string Client::messageProcessing()
 {
-    messageProcessing(myName);
+    std::string result;
+    result = messageProcessing(myName);
+    return result;
 }
 
 std::string Client::messageProcessing(std::string my_string)
 {
-    std::string result;
+    std::string result, separator;
+    getSymbol(separator);
     DWORD pid = GetCurrentProcessId();
-    result = my_string + convertedPidToString(pid) + "; ";
+    result = my_string + convertedPidToString(pid) + separator;
     return result;
 }
 

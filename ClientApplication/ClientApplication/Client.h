@@ -22,7 +22,7 @@ enum class ParseResult
 class Client : public IClient
 {
 private:
-    std::string myName{ "I am a Client;" };
+    std::string myName{ "I am a Client" };
     WSADATA wsaData;
     ADDRINFO hints;
     ADDRINFO* addrResult = nullptr;
@@ -43,5 +43,6 @@ public:
     int sendMessageToServer();
     std::string messageProcessing();
     int startClient();
+
 };
 
