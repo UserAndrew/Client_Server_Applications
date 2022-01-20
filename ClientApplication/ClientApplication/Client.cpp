@@ -60,10 +60,10 @@ ParseResult Client::createConnectToServer()
     }
 }
 
-std::string Client::messageProcessing()
+std::string Client::getMinimumMessage()
 {
-    std::string result;
-    result = messageProcessing(myName);
+    DWORD pid = GetCurrentProcessId();
+    std::string result = convertedPidToString(pid);
     return result;
 }
 
@@ -71,8 +71,8 @@ std::string Client::messageProcessing(std::string my_string)
 {
     std::string result, separator;
     getSymbol(separator);
-    DWORD pid = GetCurrentProcessId();
-    result = my_string + convertedPidToString(pid) + separator;
+    
+    result = my_string + separator;
     return result;
 }
 
@@ -130,5 +130,6 @@ int Client::startClient()
 
     createConnectSocket();
     createConnectToServer();
-    writeInSendBuffer(messageProcessing());
+    HashSumDecorator obj(std::make_shared<Client>());
+    writeInSendBuffer(obj.messageProcessing(getMinimumMessage()));
 }

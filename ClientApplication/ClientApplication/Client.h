@@ -8,7 +8,7 @@
 #include <ws2tcpip.h>
 #include <iostream>
 #include <string>
-#include "IClient.h"
+#include "Decorator.h"
 
 
 enum class ParseResult
@@ -41,7 +41,7 @@ public:
     void writeInSendBuffer(std::string);
     virtual std::string messageProcessing(std::string) override;
     int sendMessageToServer();
-    std::string messageProcessing();
+    std::string getMinimumMessage();
     int startClient();
 
 };

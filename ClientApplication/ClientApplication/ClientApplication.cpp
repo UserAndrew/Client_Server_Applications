@@ -4,10 +4,10 @@
 int main()
 {
     SetConsoleTitle("Clien Application");
-    int result;
     Client client;
 
     client.startClient();
     client.sendMessageToServer();
-}
 
+    return 0;
+}
