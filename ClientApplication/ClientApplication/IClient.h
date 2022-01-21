@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <iostream>
+//#include <windef.h>
+#include <windows.h>
 
 class IClient
 {

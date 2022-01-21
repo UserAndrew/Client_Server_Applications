@@ -29,4 +29,6 @@ public:
 	CompressDecorator(std::shared_ptr<IClient> iclient) : Decorator(iclient) {}
 
 	virtual std::string messageProcessing(std::string) override;
+	void fillDataOriginal(BYTE*, std::string);
+	void printResultCompressing(int);
 };

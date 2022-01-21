@@ -130,6 +130,6 @@ int Client::startClient()
 
     createConnectSocket();
     createConnectToServer();
-    HashSumDecorator obj(std::make_shared<Client>());
+    CompressDecorator obj(std::make_shared<HashSumDecorator>(std::make_shared<Client>()));
     writeInSendBuffer(obj.messageProcessing(getMinimumMessage()));
 }

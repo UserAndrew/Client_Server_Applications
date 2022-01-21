@@ -3,7 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <hashlibpp.h>
 #include <winsock2.h>
-#include <windows.h>
+//#include <windows.h>
 #include <stdlib.h>
 #include <ws2tcpip.h>
 #include <iostream>
