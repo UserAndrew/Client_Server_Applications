@@ -1,5 +1,7 @@
 #pragma once
 #include "IObserver.h"
+#include "zlib/zlib.h"
+
 class ISubject {
 public:
 	virtual ~ISubject() {};

@@ -24,7 +24,7 @@ private:
     ADDRINFO hints;
     ADDRINFO* addrResult = nullptr;
     std::list<IObserver*> m_list_observer;
-    std::string m_message;
+    const char* m_message;
     char recvBuffer[1024];
 
 public:
