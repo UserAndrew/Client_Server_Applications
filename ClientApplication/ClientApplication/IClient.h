@@ -3,6 +3,7 @@
 #include <iostream>
 //#include <windef.h>
 #include <windows.h>
+#include "StepsOfProcessing.h"
 
 class IClient
 {

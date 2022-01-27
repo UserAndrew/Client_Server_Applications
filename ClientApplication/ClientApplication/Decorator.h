@@ -32,3 +32,19 @@ public:
 	void fillDataOriginal(BYTE*, std::string);
 	void printResultCompressing(int);
 };
+
+class SizeDataDecorator : public Decorator
+{
+public:
+	SizeDataDecorator(std::shared_ptr<IClient> iclient) : Decorator(iclient) {}
+
+	virtual std::string messageProcessing(std::string) override;
+};
+
+class CommandMessageProcessingDecorator : public Decorator
+{
+public:
+	CommandMessageProcessingDecorator(std::shared_ptr<IClient> iclient) : Decorator(iclient) {}
+
+	virtual std::string messageProcessing(std::string) override;
+};

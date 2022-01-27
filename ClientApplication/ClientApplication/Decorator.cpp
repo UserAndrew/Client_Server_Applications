@@ -32,7 +32,7 @@ std::string HashSumDecorator::messageProcessing(std::string my_string)
 	return result_string;
 }
 
-std::string CompressDecorator::messageProcessing(std::string my_string)
+/*std::string CompressDecorator::messageProcessing(std::string my_string)
 {
 	int size_data_original = my_string.size();
 	BYTE* data_original = (BYTE*)malloc(size_data_original);
@@ -42,8 +42,35 @@ std::string CompressDecorator::messageProcessing(std::string my_string)
 	int z_result = compress(data_compressed, &size_data_compressed, data_original, \
 		size_data_original);
 	printResultCompressing(z_result);
-	std::string str_result((char*)data_original);
+	std::string str_result((char*)data_compressed);
+	free(data_original);
+	free(data_compressed);
 	return str_result;
+}*/
+
+std::string CompressDecorator::messageProcessing(std::string my_string)
+{
+	char arr_in[128];
+	char arr_out[128];
+
+	strcpy(arr_in, my_string.c_str());
+
+	z_stream defstream;
+	defstream.zalloc = Z_NULL;
+	defstream.zfree = Z_NULL;
+	defstream.opaque = Z_NULL;
+
+	defstream.avail_in = (uInt)strlen(arr_in) + 1; 
+	defstream.next_in = (Bytef*)arr_in; 
+	defstream.avail_out = (uInt)sizeof(arr_out); 
+	defstream.next_out = (Bytef*)arr_out; 
+
+	deflateInit(&defstream, Z_BEST_COMPRESSION);
+	deflate(&defstream, Z_FINISH);
+	deflateEnd(&defstream);
+
+	std::string result(arr_out);
+	return result;
 }
 
 void CompressDecorator::fillDataOriginal(BYTE* data, std::string my_string)
@@ -73,4 +100,14 @@ void CompressDecorator::printResultCompressing(int result)
 		exit(1);    
 		break;
 	}
+}
+
+std::string CommandMessageProcessingDecorator::messageProcessing(std::string _string)
+{
+	return _string;
+}
+
+std::string SizeDataDecorator::messageProcessing(std::string _string)
+{
+	return _string;
 }

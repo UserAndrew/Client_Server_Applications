@@ -6,8 +6,8 @@
 //#include <windows.h>
 #include <stdlib.h>
 #include <ws2tcpip.h>
-#include <iostream>
-#include <string>
+//#include <iostream>
+//#include <string>
 #include "Decorator.h"
 
 
@@ -43,6 +43,11 @@ public:
     int sendMessageToServer();
     std::string getMinimumMessage();
     int startClient();
-
+    Decorator stringProcessingDefinition();
+    HashSumDecorator stringProcessingDataPlusHash();
+    CompressDecorator stringProcessingCompressDataPlusHash();
+    HashSumDecorator stringProcessingDataZipPlusHash();
+    Decorator choiceMethodProcessing(StepsOfProcessing);
+    void prepareDataForServer(StepsOfProcessing);
 };
 
