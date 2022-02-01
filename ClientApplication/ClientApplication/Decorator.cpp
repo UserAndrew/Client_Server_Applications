@@ -3,11 +3,13 @@
 
 std::string Decorator::messageProcessing(std::string my_string)
 {
+	std::cout << "Called Decorator" << std::endl;
 	return m_iclient->messageProcessing(my_string);
 }
 
 std::string HashSumDecorator::messageProcessing(std::string my_string)
 {
+	std::cout << "Called HashSumDecorator" << std::endl;
 	hashwrapper* myWrapper = new md5wrapper();
 	std::string hash_string;
 	std::string separator;
@@ -50,6 +52,7 @@ std::string HashSumDecorator::messageProcessing(std::string my_string)
 
 std::string CompressDecorator::messageProcessing(std::string my_string)
 {
+	std::cout << "Called CompressDecorator" << std::endl;
 	char arr_in[128];
 	char arr_out[128];
 
@@ -70,13 +73,15 @@ std::string CompressDecorator::messageProcessing(std::string my_string)
 	deflateEnd(&defstream);
 
 	std::string result(arr_out);
-	return result;
+	std::string separator;
+	getSymbol(separator);
+	return result + separator;
 }
 
 void CompressDecorator::fillDataOriginal(BYTE* data, std::string my_string)
 {
 	char* this_data = (char*)data;
-	for (int i = 0; i < my_string.size(), i++;)
+	for (size_t i = 0; i < my_string.size(); i++)
 	{
 		this_data[i] = my_string[i];
 	}

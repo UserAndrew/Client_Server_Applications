@@ -27,6 +27,7 @@ private:
     ADDRINFO hints;
     ADDRINFO* addrResult = nullptr;
     std::string sendBuffer;
+    char recvBuffer[512];
 
 public:
     SOCKET connectSocket = INVALID_SOCKET;
@@ -43,11 +44,7 @@ public:
     int sendMessageToServer();
     std::string getMinimumMessage();
     int startClient();
-    Decorator stringProcessingDefinition();
-    HashSumDecorator stringProcessingDataPlusHash();
-    CompressDecorator stringProcessingCompressDataPlusHash();
-    HashSumDecorator stringProcessingDataZipPlusHash();
-    Decorator choiceMethodProcessing(StepsOfProcessing);
-    void prepareDataForServer(StepsOfProcessing);
+    void choiceMethodProcessing(StepsOfProcessing);
+    void shutdownSocket();
 };
 

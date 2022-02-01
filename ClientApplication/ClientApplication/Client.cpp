@@ -91,6 +91,7 @@ void Client::writeInSendBuffer(std::string my_string)
 
 int Client::sendMessageToServer()
 {
+    std::cout << sendBuffer << std::endl;
     const char* my_sendBuffer_in_char = sendBuffer.c_str();
     int result = send(connectSocket, my_sendBuffer_in_char, \
         (int)strlen(my_sendBuffer_in_char), 0);
@@ -130,59 +131,41 @@ int Client::startClient()
 
     createConnectSocket();
     createConnectToServer();
+    //HashSumDecorator obj(std::make_shared<Client>());
     //CompressDecorator obj(std::make_shared<HashSumDecorator>(std::make_shared<Client>()));
+    //HashSumDecorator obj(std::make_shared<CompressDecorator>(std::make_shared<Client>()));
     //writeInSendBuffer(obj.messageProcessing(getMinimumMessage()));
 }
 
-Decorator Client::stringProcessingDefinition()
+void Client::choiceMethodProcessing(StepsOfProcessing step)
 {
-    Decorator decorator(std::make_shared<Client>());
-    return decorator;
-}
-
-HashSumDecorator Client::stringProcessingDataPlusHash()
-{
-    HashSumDecorator decorator(std::make_shared<Client>());
-    return decorator;
-}
-
-CompressDecorator Client::stringProcessingCompressDataPlusHash()
-{
-    CompressDecorator decorator(std::make_shared<HashSumDecorator>(std::make_shared<Client>()));
-    return decorator;
-}
-
-HashSumDecorator Client::stringProcessingDataZipPlusHash()
-{
-    HashSumDecorator decorator(std::make_shared<CompressDecorator>(std::make_shared<Client>()));
-    return decorator;
-}
-
-Decorator Client::choiceMethodProcessing(StepsOfProcessing step)
-{
-    Decorator decorator(std::make_shared<Client>());
+    std::cout << (int)step << std::endl;
     if (step == StepsOfProcessing::DEFINITION)
     {
-        decorator = stringProcessingDefinition();
+         Decorator decorator(std::make_shared<Client>());
+         writeInSendBuffer(decorator.messageProcessing(getMinimumMessage()));
     }
     else if (step == StepsOfProcessing::DEF_HASH)
     {
-        decorator = stringProcessingDataPlusHash();
+        HashSumDecorator decorator(std::make_shared<Client>());
+        writeInSendBuffer(decorator.messageProcessing(getMinimumMessage()));
     }
     else if (step == StepsOfProcessing::COMPR_DEF_HASH)
     {
-        decorator = stringProcessingCompressDataPlusHash();
+        CompressDecorator decorator(std::make_shared<HashSumDecorator>(std::make_shared<Client>()));
+        writeInSendBuffer(decorator.messageProcessing(getMinimumMessage()));
     }
     else if (step == StepsOfProcessing::DEF_ZIP_HASH)
     {
-        decorator = stringProcessingDataZipPlusHash();
+        HashSumDecorator decorator(std::make_shared<CompressDecorator>(std::make_shared<Client>()));
+        writeInSendBuffer(decorator.messageProcessing(getMinimumMessage()));
     }
-    return decorator;
 }
 
-void Client::prepareDataForServer(StepsOfProcessing step)
+void Client::shutdownSocket()
 {
-    Decorator decorator(std::make_shared<Client>());
-    decorator = choiceMethodProcessing(step);
-    writeInSendBuffer(decorator.messageProcessing(getMinimumMessage()));
+    closesocket(connectSocket);
+    freeaddrinfo(addrResult);
+    WSACleanup();
+    std::cout << "Client's socket closed." << std::endl;
 }
