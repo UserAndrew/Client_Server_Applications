@@ -72,7 +72,7 @@ ParseResult Server::setListenSocket()
     return ParseResult::SUCCESS;
 }
 
-ParseResult Server::createClientSocket()
+ParseResult Server::createClientSocket(SOCKET clientSocket)
 {
     clientSocket = accept(listenSocket, NULL, NULL);
 
@@ -117,15 +117,15 @@ int Server::startServer()
     createListenSocket();
     serverSocketBinding();
     setListenSocket();
-    createClientSocket();
-
+    //createClientSocket();
+    return 0;
 }
 
-int Server::receiveFromClient()
+int Server::receiveFromClient(SOCKET clientSocket)
 {
     int result;
     ZeroMemory(recvBuffer, sizeof(recvBuffer));
-    result = recv(clientSocket, recvBuffer, 1024, 0);
+    result = recv(clientSocket, recvBuffer, 512, 0);
     if (result > 0)
     {
         std::cout << "Received " << result << " bytes." << std::endl;
@@ -138,12 +138,13 @@ int Server::receiveFromClient()
     }
     else
     {
-        std::cout << "receive failed with error." << std::endl;
+        std::cout << "receive failed with error#" << WSAGetLastError() << std::endl;
         closesocket(clientSocket);
         freeaddrinfo(addrResult);
         WSACleanup();
         return 1;
     }
+    return 0;
 }
 
 void Server::Attach(IObserver* observer)
@@ -163,4 +164,65 @@ void Server::Notify()
         (*iterator)->Update(m_message);
         ++iterator;
     }
+}
+
+void Server::fillMessage()
+{
+    std::string &message = m_message;
+    int i = 0;
+    while (recvBuffer[i] != '\0')
+    {
+        message[i] = recvBuffer[i];
+        i++;
+    }
+}
+
+void Server::printResult()
+{
+    std::cout << m_message;
+}
+
+void Server::shutdownClientSocket(SOCKET clientSocket)
+{
+    int result = shutdown(clientSocket, SD_BOTH);
+    if (result == SOCKET_ERROR)
+    {
+        std::cout << "Shutdown client socket failed." << std::endl;
+        closesocket(clientSocket);
+        freeaddrinfo(addrResult);
+        WSACleanup();
+
+    }
+
+    std::cout << "Shutdown client socket succes." << std::endl;
+    closesocket(clientSocket);
+    //freeaddrinfo(addrResult);
+    //WSACleanup();
+}
+
+void Server::recieveAndProcessDataOnTheServer(SOCKET clientSocket)
+{
+    //createClientSocket();
+    receiveFromClient(clientSocket);
+    shutdownClientSocket(clientSocket);
+    addDataToContainer();
+}
+
+void Server::addDataToContainer()
+{
+    std::string data;
+    std::stringstream ss;
+    ss << recvBuffer;
+    data = ss.str();
+    my_data.push_back(data);
+}
+
+Server::~Server()
+{
+    std::ofstream fout("DataServer.txt"); 
+    for (auto &i : my_data)
+    {
+        fout << i;
+    }
+    fout.close();
 }

@@ -7,6 +7,9 @@
 #include <ws2tcpip.h>
 #include <iostream>
 #include <list>
+#include <vector>
+#include <sstream>
+#include <fstream>
 #include "ISubject.h"
 
 enum class ParseResult
@@ -24,13 +27,14 @@ private:
     ADDRINFO hints;
     ADDRINFO* addrResult = nullptr;
     std::list<IObserver*> m_list_observer;
-    const char* m_message;
-    char recvBuffer[1024];
+    std::string m_message;
+    char recvBuffer[512];
+    std::vector<std::string> my_data;
 
 public:
-    SOCKET clientSocket = INVALID_SOCKET;
+    SOCKET clientSocket[10] = { INVALID_SOCKET };
     SOCKET listenSocket = INVALID_SOCKET;
-    virtual ~Server(){};
+    virtual ~Server();
     void Attach(IObserver* observer) override;
     void Detach(IObserver* observer) override;
     void Notify() override;
@@ -39,7 +43,12 @@ public:
     ParseResult createListenSocket();
     ParseResult serverSocketBinding();
     ParseResult setListenSocket();
-    ParseResult createClientSocket();
+    ParseResult createClientSocket(SOCKET);
     int startServer();
-    int receiveFromClient();
+    int receiveFromClient(SOCKET);
+    void fillMessage();
+    void printResult();
+    void shutdownClientSocket(SOCKET);
+    void addDataToContainer();
+    void recieveAndProcessDataOnTheServer(SOCKET);
 };

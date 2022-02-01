@@ -14,9 +14,9 @@ public:
     }
     virtual ~Observer() {}
 
-    void Update(const char* message_from_subject) override;
+    std::string Update(std::string message_from_subject) override;
     void RemoveMeFromTheList();
-    void fillDataCompressed(const char*, BYTE*);
+    void fillDataCompressed(std::string, BYTE*);
     void printResultUncompressing(int);
 };
 
