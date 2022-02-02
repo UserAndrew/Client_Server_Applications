@@ -11,8 +11,11 @@ int main()
     server.startServer();
 
     SOCKET new_connection{};
-    for (int i = 0; i < 4; i++)
+    //for (int i = 0; i < 5; i++)
+    int i = 0;
+    for(;;)
     {
+
         std::cout << "Iteration # " << i + 1 << std::endl;
         new_connection = accept(server.listenSocket, NULL, NULL);
         if (new_connection == 0) {
@@ -21,10 +24,12 @@ int main()
         else {
             std::cout << "Client Connected!\n";
 
-            server.clientSocket[i] = new_connection;
-            std::thread new_thread(&Server::recieveAndProcessDataOnTheServer, &server, server.clientSocket[i]);
+            //server.clientSocket[i] = new_connection;
+            SOCKET clientSocket = new_connection;
+            std::thread new_thread(&Server::recieveAndProcessDataOnTheServer, &server, clientSocket);
             new_thread.join();
         }
+        i++;
     }
     
     //Observer *observer_decompr = new Observer(server);
