@@ -1,15 +1,16 @@
 #include "Decorator.h"
-#include "getSymbol.h"
 
-std::string Decorator::messageProcessing(std::string my_string)
+std::string Decorator::messageProcessing(std::string my_string, std::string& flag_string)
 {
 	std::cout << "Called Decorator" << std::endl;
-	return m_iclient->messageProcessing(my_string);
+	flag_string.append("");
+	return this->m_iclient->messageProcessing(my_string, flag_string);
 }
 
-std::string HashSumDecorator::messageProcessing(std::string my_string)
+std::string HashSumDecorator::messageProcessing(std::string my_string, std::string& flag_string)
 {
 	std::cout << "Called HashSumDecorator" << std::endl;
+	flag_string.append("h");
 	hashwrapper* myWrapper = new md5wrapper();
 	std::string hash_string;
 	std::string separator;
@@ -28,15 +29,20 @@ std::string HashSumDecorator::messageProcessing(std::string my_string)
 			<< std::endl;
 	}
 
-	std::string result_string = Decorator::messageProcessing(my_string) + hash_string + separator;
+
+	std::string result_string = Decorator::messageProcessing(my_string, flag_string) + hash_string + separator;
 	delete myWrapper;
 	myWrapper = NULL;
+	//std::string result = std::to_string(GetCurrentProcessId());
+	//std::string result_string = Decorator::messageProcessing(my_string, flag_string) + result + separator;
 	return result_string;
 }
 
-/*std::string CompressDecorator::messageProcessing(std::string my_string)
+std::string CompressDecorator::messageProcessing(std::string my_string, std::string& flag_string)
 {
-	int size_data_original = my_string.size();
+	std::cout << "Called CompressDecorator" << std::endl;
+	flag_string.append("z");
+	/*int size_data_original = my_string.size();
 	BYTE* data_original = (BYTE*)malloc(size_data_original);
 	fillDataOriginal(data_original, my_string);
 	ULONG size_data_compressed = (size_data_original * 1.1) + 12;
@@ -47,13 +53,17 @@ std::string HashSumDecorator::messageProcessing(std::string my_string)
 	std::string str_result((char*)data_compressed);
 	free(data_original);
 	free(data_compressed);
+	return Decorator::messageProcessing(str_result, flag_string);*/
+	std::string tmp = Decorator::messageProcessing(my_string, flag_string);
+	std::string str_result = Gzip::compress(tmp);
 	return str_result;
-}*/
+}
 
-std::string CompressDecorator::messageProcessing(std::string my_string)
+/*std::string CompressDecorator::messageProcessing(std::string my_string, std::string& flag_string)
 {
 	std::cout << "Called CompressDecorator" << std::endl;
-	char arr_in[128];
+	flag_string.append("z");
+	/*char arr_in[128];
 	char arr_out[128];
 
 	strcpy(arr_in, my_string.c_str());
@@ -75,8 +85,9 @@ std::string CompressDecorator::messageProcessing(std::string my_string)
 	std::string result(arr_out);
 	std::string separator;
 	getSymbol(separator);
-	return result + separator;
-}
+	std::string result = std::to_string(GetCurrentProcessId()) + separator + Decorator::messageProcessing(my_string, flag_string);
+	return result;
+}*/
 
 void CompressDecorator::fillDataOriginal(BYTE* data, std::string my_string)
 {
@@ -107,12 +118,14 @@ void CompressDecorator::printResultCompressing(int result)
 	}
 }
 
-std::string CommandMessageProcessingDecorator::messageProcessing(std::string _string)
+std::string CommandMessageProcessingDecorator::messageProcessing(std::string _string, std::string& flag_string)
 {
 	return _string;
 }
 
-std::string SizeDataDecorator::messageProcessing(std::string _string)
+
+
+std::string SizeDataDecorator::messageProcessing(std::string _string, std::string& flag_string)
 {
 	return _string;
 }

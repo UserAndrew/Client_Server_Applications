@@ -2,6 +2,12 @@
 #include "Observer.h"
 #include <thread>
 
+void signalHandler(int signum) {
+    std::cout << "Interrupt signal (" << signum << ") received.\n";
+
+    exit(0);
+} 
+
 int main()
 {
     SetConsoleTitle("Server Application");
@@ -12,10 +18,12 @@ int main()
 
     SOCKET new_connection{};
     //for (int i = 0; i < 5; i++)
+    signal(SIGINT, signalHandler);
+    //std::string my_key;
     int i = 0;
     for(;;)
     {
-
+        
         std::cout << "Iteration # " << i + 1 << std::endl;
         new_connection = accept(server.listenSocket, NULL, NULL);
         if (new_connection == 0) {
@@ -30,12 +38,17 @@ int main()
             new_thread.join();
         }
         i++;
+        //std::cout << "Press q to quit or another any key to continue." << std::endl;
+        //std::cin >> my_key;
+        //if (my_key == "q") break;
+        //else continue;
     }
     
-    //Observer *observer_decompr = new Observer(server);
-    //server.fillMessage();
-    //server.Notify();
-    //server.printResult();
+    
+    /*Observer* observer_decompr = new Observer(server);
+    server.fillMessage();
+    server.Notify();
+    server.printResult();*/
 
     return 0;
 }

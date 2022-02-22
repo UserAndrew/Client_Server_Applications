@@ -1,14 +1,12 @@
 #pragma once
 //#pragma comment (lib, "Ws2_32.lib")
 #define WIN32_LEAN_AND_MEAN
-#include <hashlibpp.h>
+//#include <hashlibpp.h>
+#include "Decorator.h"
 #include <winsock2.h>
-//#include <windows.h>
 #include <stdlib.h>
 #include <ws2tcpip.h>
-//#include <iostream>
-//#include <string>
-#include "Decorator.h"
+
 
 
 enum class ParseResult
@@ -31,7 +29,8 @@ private:
 
 public:
     SOCKET connectSocket = INVALID_SOCKET;
-
+    
+    std::string command_string{""};
     std::string getMyname() { return myName; }
     void printCurrentProcessId();
     int initWinsock();
@@ -40,7 +39,7 @@ public:
     ParseResult createConnectToServer();
     std::string convertedPidToString(DWORD);
     void writeInSendBuffer(std::string);
-    virtual std::string messageProcessing(std::string) override;
+    virtual std::string messageProcessing(std::string, std::string&) override;
     int sendMessageToServer();
     std::string getMinimumMessage();
     int startClient();

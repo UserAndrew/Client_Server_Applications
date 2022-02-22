@@ -6,7 +6,10 @@ ClientApplication/ClientApplication/zlib/
 ClientApplication/.vs/
 ServerApplication/.vs/
 ServerApplication/ServerApplication/zlib/
-
+ServerApplication/packages/
+ServerApplication/ServerApplication/packages.config
+ClientApplication/packages/
+ClientApplication/ClientApplication/packages.config
 
 *.sln
 

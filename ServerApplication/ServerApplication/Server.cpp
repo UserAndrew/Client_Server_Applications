@@ -205,6 +205,16 @@ void Server::recieveAndProcessDataOnTheServer(SOCKET clientSocket)
     //createClientSocket();
     receiveFromClient(clientSocket);
     shutdownClientSocket(clientSocket);
+    /*Observer* observer_decompr = new Observer(server);
+    server.fillMessage();
+    server.Notify();
+    server.printResult();*/
+    std::string data;
+    std::stringstream ss;
+    ss << recvBuffer;
+    data = ss.str();
+    std::string _string = Gzip::decompress(data);
+    std::cout << _string << std::endl;
     addDataToContainer();
 }
 

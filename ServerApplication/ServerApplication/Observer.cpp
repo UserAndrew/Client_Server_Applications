@@ -1,8 +1,8 @@
 #include "Observer.h"
 
-/*std::string Observer::Update(std::string message_from_subject)
+std::string Observer::Update(std::string message_from_subject)
 {
-	ULONG size_data_original = 1024;
+	/*ULONG size_data_original = 1024;
 	ULONG size_data_uncompressed = size_data_original;
 	BYTE* data_uncompressed = (BYTE*)malloc(size_data_uncompressed);
 	BYTE* data_read_in_compressed = (BYTE*)malloc(size_data_uncompressed);
@@ -13,12 +13,13 @@
 	std::string final_string((char*)data_uncompressed);
 	m_message_from_subject = final_string;
 	free(data_uncompressed);
-	free(data_read_in_compressed);
-	std::cout << m_message_from_subject;
-	return m_message_from_subject;
-}*/
+	free(data_read_in_compressed);*/
+	std::string umcompress_data = Gzip::decompress(message_from_subject);
+	std::cout << umcompress_data;
+	return umcompress_data;
+}
 
-std::string Observer::Update(std::string message_from_subject)
+/*std::string Observer::Update(std::string message_from_subject)
 {
 	char arr_in[128];
 	char arr_out[128];
@@ -45,7 +46,7 @@ std::string Observer::Update(std::string message_from_subject)
 	std::string result(arr_out);
 	std::cout << result << std::endl;
 	return result;
-}
+}*/
 
 void Observer::printResultUncompressing(int result)
 {

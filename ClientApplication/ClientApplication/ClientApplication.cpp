@@ -1,4 +1,4 @@
-#include <iostream>
+//#include <iostream>
 #include "Client.h"
 
 int main(int argc, char* argv[])
@@ -23,16 +23,21 @@ int main(int argc, char* argv[])
         else if (strcmp(argv[1], "1") == 0)
         {
             std::cout << "Entered 1" << std::endl;
-            steps = StepsOfProcessing::DEF_HASH;
+            steps = StepsOfProcessing::COMPR_DEF;
         }
         else if (strcmp(argv[1], "2") == 0)
         {
             std::cout << "Entered 2" << std::endl;
-            steps = StepsOfProcessing::COMPR_DEF_HASH;
+            steps = StepsOfProcessing::DEF_HASH;
         }
         else if (strcmp(argv[1], "3") == 0)
         {
             std::cout << "Entered 3" << std::endl;
+            steps = StepsOfProcessing::COMPR_DEF_HASH;
+        }
+        else if (strcmp(argv[1], "4") == 0)
+        {
+            std::cout << "Entered 4" << std::endl;
             steps = StepsOfProcessing::DEF_ZIP_HASH;
         }
         else

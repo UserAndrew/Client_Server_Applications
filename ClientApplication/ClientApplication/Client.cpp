@@ -1,5 +1,5 @@
 #include "Client.h"
-#include "getSymbol.h"
+//#include "getSymbol.h"
 #include <sstream>
 
 
@@ -67,7 +67,7 @@ std::string Client::getMinimumMessage()
     return result;
 }
 
-std::string Client::messageProcessing(std::string my_string)
+std::string Client::messageProcessing(std::string my_string, std::string& flag_string)
 {
     std::string result, separator;
     getSymbol(separator);
@@ -135,30 +135,53 @@ int Client::startClient()
     //CompressDecorator obj(std::make_shared<HashSumDecorator>(std::make_shared<Client>()));
     //HashSumDecorator obj(std::make_shared<CompressDecorator>(std::make_shared<Client>()));
     //writeInSendBuffer(obj.messageProcessing(getMinimumMessage()));
+    return 0;
 }
 
 void Client::choiceMethodProcessing(StepsOfProcessing step)
 {
     std::cout << (int)step << std::endl;
+    std::string message, separator;
+    getSymbol(separator);
     if (step == StepsOfProcessing::DEFINITION)
     {
-         Decorator decorator(std::make_shared<Client>());
-         writeInSendBuffer(decorator.messageProcessing(getMinimumMessage()));
+        Decorator decorator(std::make_shared<Client>());
+        message = decorator.messageProcessing(getMinimumMessage(), command_string);
+        std::cout << command_string << std::endl;
+        message.insert(0, command_string.append(separator));
+        writeInSendBuffer(message);
+    }
+    else if (step == StepsOfProcessing::COMPR_DEF)
+    {
+        CompressDecorator decorator(std::make_shared<Client>());
+        message = decorator.messageProcessing(getMinimumMessage(), command_string);
+        std::cout << command_string << std::endl;
+        //message.insert(0, command_string.append(separator));
+        writeInSendBuffer(message);
     }
     else if (step == StepsOfProcessing::DEF_HASH)
     {
         HashSumDecorator decorator(std::make_shared<Client>());
-        writeInSendBuffer(decorator.messageProcessing(getMinimumMessage()));
+        message = decorator.messageProcessing(getMinimumMessage(), command_string);
+        std::cout << command_string << std::endl;
+        message.insert(0, command_string.append(separator));
+        writeInSendBuffer(message);
     }
     else if (step == StepsOfProcessing::COMPR_DEF_HASH)
     {
         CompressDecorator decorator(std::make_shared<HashSumDecorator>(std::make_shared<Client>()));
-        writeInSendBuffer(decorator.messageProcessing(getMinimumMessage()));
+        message = decorator.messageProcessing(getMinimumMessage(), command_string);
+        std::cout << command_string << std::endl;
+        message.insert(0, command_string.append(separator));
+        writeInSendBuffer(message);
     }
     else if (step == StepsOfProcessing::DEF_ZIP_HASH)
     {
         HashSumDecorator decorator(std::make_shared<CompressDecorator>(std::make_shared<Client>()));
-        writeInSendBuffer(decorator.messageProcessing(getMinimumMessage()));
+        message = decorator.messageProcessing(getMinimumMessage(), command_string);
+        std::cout << command_string << std::endl;
+        message.insert(0, command_string.append(separator));
+        writeInSendBuffer(message);
     }
 }
 

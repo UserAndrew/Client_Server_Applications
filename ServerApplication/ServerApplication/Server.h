@@ -10,7 +10,9 @@
 #include <vector>
 #include <sstream>
 #include <fstream>
+#include <csignal>
 #include "ISubject.h"
+#include "gzip.h"
 
 enum class ParseResult
 {
